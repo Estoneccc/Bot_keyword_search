@@ -1,5 +1,10 @@
 package project.bot;
 
+import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+
 public interface Bot {
-    void sendMessage(Long chatId, String text);
+    /**
+     * Бот отправляет обработанное сообщение в чат
+     */
+    void sendMessage(SendMessage message);
 }

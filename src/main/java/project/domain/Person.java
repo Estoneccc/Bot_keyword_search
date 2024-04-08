@@ -6,18 +6,18 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "person")
-public class User {
+public class Person {
 
     @Id
     private Long chatId;
 
     private String name;
 
-    public User(Long chatId, String name) {
+    public Person(Long chatId, String name) {
         this.chatId = chatId;
         this.name = name;
     }
-    public User(){
+    public Person(){
     }
 
     public Long getChatId() {
