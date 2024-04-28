@@ -3,6 +3,7 @@ package project.services.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import project.processors.states.State;
 import project.services.PersonService;
 import project.domain.Person;
 import project.repositories.PersonRepository;
@@ -44,5 +45,33 @@ public class PersonServiceImpl implements PersonService {
     @Override
     public void deletePerson(Person person) {
         personRepository.delete(person);
+    }
+
+    @Override
+    public void updatePersonState(Long chatId, State newState) {
+        Optional<Person> personOptional = personRepository.findById(chatId);
+        personOptional.ifPresent(person -> {
+            person.setState(newState);
+            personRepository.save(person);
+        });
+    }
+
+    @Override
+    public State findStateByUserId(Long chatId) {
+        return personRepository.findStateByUserId(chatId);
+    }
+
+    @Override
+    public void updatePersonActiveChat(Long chatId, Long activeChat) {
+        Optional<Person> personOptional = personRepository.findById(chatId);
+        personOptional.ifPresent(person -> {
+            person.setActiveChat(activeChat);
+            personRepository.save(person);
+        });
+    }
+
+    @Override
+    public Long findByActiveChat(Long userId) {
+        return personRepository.findActiveChatByUserId(userId);
     }
 }

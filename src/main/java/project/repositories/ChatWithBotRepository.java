@@ -5,5 +5,5 @@ import org.springframework.stereotype.Repository;
 import project.domain.ChatWithBot;
 
 @Repository
-public interface ChatForBotRepository extends JpaRepository<ChatWithBot, Long> {
+public interface ChatWithBotRepository extends JpaRepository<ChatWithBot, Long> {
 }

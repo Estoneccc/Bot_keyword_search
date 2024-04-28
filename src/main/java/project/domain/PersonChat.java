@@ -1,9 +1,8 @@
 package project.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+
+import java.util.List;
 
 @Entity
 @Table(name = "personChat")
@@ -15,6 +14,8 @@ public class PersonChat {
     private Long userId;
 
     private Long chatId;
+
+    private String keyWords;
 
     public PersonChat(Long userId, Long chatId) {
         this.userId = userId;
@@ -31,5 +32,13 @@ public class PersonChat {
 
     public Long getChatId() {
         return chatId;
+    }
+
+    public void setKeyWords(String keyWords) {
+        this.keyWords = keyWords;
+    }
+
+    public String getKeyWords() {
+        return keyWords;
     }
 }

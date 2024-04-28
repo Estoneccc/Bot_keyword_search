@@ -5,7 +5,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "chatForBot")
+@Table(name = "chatWithBot")
 public class ChatWithBot {
 
     @Id

@@ -11,4 +11,5 @@ public interface ChatWithBotService {
     ChatWithBot findChatById(Long chatId);
     List<ChatWithBot> findAllChat();
     void deleteChat(ChatWithBot chatWithBot);
+    boolean isChatListEmpty();
 }
