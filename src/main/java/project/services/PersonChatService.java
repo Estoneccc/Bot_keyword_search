@@ -33,7 +33,7 @@ public interface PersonChatService {
     /**
      * Удаляет активный чат из базы
      */
-    void deletePersonChat(PersonChat personChat);
+    void deletePersonChatByChatId(Long chatId);
 
     /**
      * Изменяет ключевые слова для активного чата пользователя

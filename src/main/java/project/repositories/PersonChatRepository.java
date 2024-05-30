@@ -18,4 +18,5 @@ public interface PersonChatRepository extends JpaRepository<PersonChat, Long> {
     String findKeyWordsByUserIdAndChatId(@Param("userId") Long userId, @Param("chatId") Long chatId);
     @Query("SELECT pc FROM PersonChat pc WHERE pc.chatId = :chatId")
     List<PersonChat> findAllPersonChatByChatId(@Param("chatId") Long chatId);
+    void deletePersonChatByChatId(Long chatId);
 }

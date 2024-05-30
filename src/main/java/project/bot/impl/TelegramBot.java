@@ -65,9 +65,9 @@ public class TelegramBot extends TelegramLongPollingBot implements Bot {
 
                 if (messageFromUser.getText().equals("/start")) {
                     startCommand(sendMessage, chatId, messageFromUser.getFrom().getFirstName());
-                }
-                else {
-                    if (personService.findStateByUserId(chatId).equals(State.CHAT_SELECTED)) {
+                } else {
+                    if (personService.findStateByUserId(chatId).equals(State.CHAT_SELECTED)
+                    || personService.findStateByUserId(chatId).equals(State.ACTIVE_CHAT_SELECTED)) {
                         personChatService.updateKeywordsForChat(
                                 chatId,
                                 personService.findByActiveChat(chatId),
@@ -88,29 +88,26 @@ public class TelegramBot extends TelegramLongPollingBot implements Bot {
                     sendMessage.setChatId(personChat.getUserId());
                     Arrays.asList(personChat.getKeyWords().split("[\\s,]+")).forEach(keyWord -> {
 
-                        Properties props = new Properties();
-                        props.setProperty("annotators", "tokenize,ssplit,pos,lemma");
-                        StanfordCoreNLP pipeline = new StanfordCoreNLP(props);
+//                        Properties props = new Properties();
+//                        props.setProperty("annotators", "tokenize,ssplit,pos,lemma");
+//                        StanfordCoreNLP pipeline = new StanfordCoreNLP(props);
+//
+//                        Annotation annotation = new Annotation(messageFromUser.getText());
+//                        pipeline.annotate(annotation);
+//
+//                        List<CoreLabel> tokens = annotation.get(CoreAnnotations.TokensAnnotation.class);
 
-                        Annotation annotation = new Annotation(messageFromUser.getText());
-                        pipeline.annotate(annotation);
 
-                        List<CoreLabel> tokens = annotation.get(CoreAnnotations.TokensAnnotation.class);
+                        if (messageFromUser.getText().contains(keyWord)) {
+                            sendMessage.setText(String.format("Пришло важное сообщение из чата:\n\"%s\"", messageFromUser.getChat().getTitle()));
+                            sendMessage(sendMessage);
 
-                        for (CoreLabel token : tokens) {
-                            String lemma = token.get(CoreAnnotations.LemmaAnnotation.class);
-                            if (lemma.equalsIgnoreCase(keyWord)) {
-                                sendMessage.setText(String.format("Пришло важное сообщение из чата:\n\"%s\"", messageFromUser.getChat().getTitle()));
-                                sendMessage(sendMessage);
+                            ForwardMessage forwardMessage = new ForwardMessage();
+                            forwardMessage.setChatId(personChat.getUserId());
+                            forwardMessage.setFromChatId(chatId);
+                            forwardMessage.setMessageId(messageFromUser.getMessageId());
 
-                                ForwardMessage forwardMessage = new ForwardMessage();
-                                forwardMessage.setChatId(personChat.getUserId());
-                                forwardMessage.setFromChatId(chatId);
-                                forwardMessage.setMessageId(messageFromUser.getMessageId());
-
-                                forwardMessage(forwardMessage);
-                                break;
-                            }
+                            forwardMessage(forwardMessage);
                         }
                     });
 
@@ -135,12 +132,11 @@ public class TelegramBot extends TelegramLongPollingBot implements Bot {
             String callbackData = update.getCallbackQuery().getData();
             DeleteMessage deleteMessage = new DeleteMessage(String.valueOf(user.getId()), update.getCallbackQuery().getMessage().getMessageId());
 
-            if ("start".equals((callbackData))) {
+            if ("start".equals(callbackData)) {
                 sendMessage.setChatId(user.getId());
                 deleteMessage(deleteMessage);
                 startCommand(sendMessage, user.getId(), user.getFirstName());
-            }
-            if ("chat_list".equals(callbackData)) {
+            } else if ("chat_list".equals(callbackData)) {
                 personService.updatePersonState(user.getId(), State.SELECT_CHAT);
                 sendMessage.setChatId(user.getId());
 
@@ -153,8 +149,7 @@ public class TelegramBot extends TelegramLongPollingBot implements Bot {
                     sendMessage.setText("Список пуст.");
                     deleteMessage(deleteMessage);
                     sendMessage(sendMessage);
-                }
-                else {
+                } else {
                     sendMessage.setText("Выберите чат для получения уведомлений:");
                     List<List<InlineKeyboardButton>> keyboard = new LinkedList<>();
                     listChatsWithBotAndPerson.forEach(chatWithBot ->
@@ -164,29 +159,39 @@ public class TelegramBot extends TelegramLongPollingBot implements Bot {
                     deleteMessage(deleteMessage);
                     sendMessage(sendMessage);
                 }
-            }
-            else if ("active_chat_list".equals(callbackData)) {
+            } else if ("active_chat_list".equals(callbackData)) {
                 personService.updatePersonState(user.getId(), State.SELECT_ACTIVE_CHAT);
                 sendMessage.setChatId(user.getId());
 
                 List<PersonChat> listActiveChats = personChatService.findAllPersonChatByUserId(user.getId());
+                listActiveChats.removeIf(activeChat -> activeChat.getKeyWords() == null);
 
                 if (listActiveChats.isEmpty()) {
+                    List<List<InlineKeyboardButton>> keyboard = new LinkedList<>();
                     sendMessage.setText("Список отслеживаемых чатов пуст.");
+                    keyboard.add(getRowKeyboardButton("< Назад", "start"));
+                    sendMessage.setReplyMarkup(getKeyboardMarkup(keyboard));
                     deleteMessage(deleteMessage);
                     sendMessage(sendMessage);
-                }
-                else {
+                } else {
                     sendMessage.setText("Выберите активный чат");
                     List<List<InlineKeyboardButton>> keyboard = new LinkedList<>();
                     listActiveChats.forEach(activeChat ->
-                        keyboard.add(getRowKeyboardButton(chatWithBotService.findChatById(activeChat.getChatId()).getFirstName(),
-                                String.valueOf(activeChat.getChatId()))));
+                            keyboard.add(getRowKeyboardButton(chatWithBotService.findChatById(activeChat.getChatId()).getFirstName(),
+                                    String.valueOf(activeChat.getChatId()))));
                     keyboard.add(getRowKeyboardButton("< Назад", "start"));
                     sendMessage.setReplyMarkup(getKeyboardMarkup(keyboard));
                     deleteMessage(deleteMessage);
                     sendMessage(sendMessage);
                 }
+            } else if ("change_keywords".equals(callbackData)) {
+                changeKeywordsCommand(sendMessage, user, personService.findByActiveChat(user.getId()), deleteMessage);
+            } else if ("delete_chat".equals(callbackData)) {
+                sendMessage.setChatId(user.getId());
+                personChatService.deletePersonChatByChatId(personService.findByActiveChat(user.getId()));
+                deleteMessage(deleteMessage);
+                sendMessage.setText("Чат больше не отслеживается.");
+                sendMessage(sendMessage);
             }
             else {
                 if (personService.findStateByUserId(user.getId()).equals(State.SELECT_CHAT)) {
@@ -203,20 +208,24 @@ public class TelegramBot extends TelegramLongPollingBot implements Bot {
                                 chatWithBotService.findChatById(Long.valueOf(callbackData)).getFirstName()));
                         deleteMessage(deleteMessage);
                         sendMessage(sendMessage);
-                    }
-                    else {
-                        sendMessage.setChatId(user.getId());
-                        sendMessage.setText(String.format("Ключевые слова для чата \"%s\" уже заданы:\n%s\nЕсли желаете изменить их, то введите новые.",
-                                chatWithBotService.findChatById(Long.valueOf(callbackData)).getFirstName(),
-                                personChatService.findKeyWordsByUserIdAndChatId(user.getId(), Long.valueOf(callbackData))));
-                        deleteMessage(deleteMessage);
-                        sendMessage(sendMessage);
+                    } else {
+                        changeKeywordsCommand(sendMessage, user, personService.findByActiveChat(user.getId()), deleteMessage);
                     }
                 }
                 if (personService.findStateByUserId(user.getId()).equals(State.SELECT_ACTIVE_CHAT)) {
-
                     personService.updatePersonState(user.getId(), State.ACTIVE_CHAT_SELECTED);
-
+                    personService.updatePersonActiveChat(user.getId(), Long.valueOf(callbackData));
+                    sendMessage.setChatId(user.getId());
+                    sendMessage.setText(String.format("Выбран чат: %s\nКлючевые слова: %s",
+                            chatWithBotService.findChatById(Long.valueOf(callbackData)).getFirstName(),
+                            personChatService.findKeyWordsByUserIdAndChatId(user.getId(), Long.valueOf(callbackData))));
+                    List<List<InlineKeyboardButton>> keyboard = new LinkedList<>();
+                    keyboard.add(getRowKeyboardButton("Изменить ключевые слова", "change_keywords"));
+                    keyboard.add((getRowKeyboardButton("Перестать отслеживать чат", "delete_chat")));
+                    keyboard.add(getRowKeyboardButton("< Назад", "active_chat_list"));
+                    sendMessage.setReplyMarkup(getKeyboardMarkup(keyboard));
+                    deleteMessage(deleteMessage);
+                    sendMessage(sendMessage);
                 }
             }
         }
@@ -275,6 +284,18 @@ public class TelegramBot extends TelegramLongPollingBot implements Bot {
         keyboard.add(getRowKeyboardButton("Список всех чатов", "chat_list"));
         keyboard.add(getRowKeyboardButton("Список активных чатов", "active_chat_list"));
         sendMessage.setReplyMarkup(getKeyboardMarkup(keyboard));
+        sendMessage(sendMessage);
+    }
+
+    void changeKeywordsCommand(SendMessage sendMessage, User user, Long activeChat, DeleteMessage deleteMessage) {
+        sendMessage.setChatId(user.getId());
+        List<List<InlineKeyboardButton>> keyboard = new LinkedList<>();
+        keyboard.add(getRowKeyboardButton("< Назад", "chat_list"));
+        sendMessage.setText(String.format("Ключевые слова для чата \"%s\" уже заданы:\n%s\nЕсли желаете изменить их, то введите новые.",
+                chatWithBotService.findChatById(activeChat).getFirstName(),
+                personChatService.findKeyWordsByUserIdAndChatId(user.getId(), activeChat)));
+        sendMessage.setReplyMarkup(getKeyboardMarkup(keyboard));
+        deleteMessage(deleteMessage);
         sendMessage(sendMessage);
     }
 

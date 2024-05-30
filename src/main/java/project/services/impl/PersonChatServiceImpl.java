@@ -2,6 +2,7 @@ package project.services.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import project.domain.PersonChat;
 import project.repositories.PersonChatRepository;
 import project.services.PersonChatService;
@@ -44,8 +45,9 @@ public class PersonChatServiceImpl implements PersonChatService {
     }
 
     @Override
-    public void deletePersonChat(PersonChat personChat) {
-        personChatRepository.delete(personChat);
+    @Transactional
+    public void deletePersonChatByChatId(Long chatId) {
+        personChatRepository.deletePersonChatByChatId(chatId);
     }
 
     @Override
