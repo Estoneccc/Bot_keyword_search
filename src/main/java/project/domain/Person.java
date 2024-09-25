@@ -5,6 +5,10 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import project.processors.states.State;
 
+
+/**
+ * Паттерн Prototype
+  */
 @Entity
 @Table(name = "person")
 public class Person {
@@ -25,6 +29,21 @@ public class Person {
         this.chatId = chatId;
         this.name = name;
         this.state = State.START;
+    }
+
+    private Person(Person prototype) {
+        this.state = prototype.getState();
+        this.name = prototype.getName();
+        this.chatId = prototype.getChatId();
+        this.activeChat = prototype.getActiveChat();
+    }
+
+    public Person newPerson() {
+        return new Person(this);
+    }
+
+    public String getName() {
+        return name;
     }
 
     public Long getChatId() {

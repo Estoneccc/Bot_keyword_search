@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 
 import java.util.List;
 
+/**
+ * Паттерн Static factory method
+ */
 @Entity
 @Table(name = "personChat")
 public class PersonChat {
@@ -17,13 +20,17 @@ public class PersonChat {
 
     private String keyWords;
 
-    public PersonChat(Long userId, Long chatId) {
+    PersonChat(Long userId, Long chatId) {
         this.userId = userId;
         this.chatId = chatId;
     }
 
-    public PersonChat() {
+    PersonChat() {
 
+    }
+
+    public static PersonChat getPersonChat(Long userId, Long chatId) {
+        return new PersonChat(userId, chatId);
     }
 
     public Long getUserId() {
