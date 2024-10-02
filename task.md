@@ -27,3 +27,37 @@ https://github.com/Estoneccc/Bot_keyword_search/blob/task1/task1-Danil/src/main/
 так как он имеет статически фабричный метод getPersonChat(),
 который возвращает экземпляр этого класса. Конструкторы при этом
 имеют видимость default.
+
+## Задание 5. Паттерн Builder
+
+https://github.com/Estoneccc/Bot_keyword_search/blob/task1/task1-Danil/src/main/java/project/domain/Chat.java
+
+В классе Chat реализован паттерн Builder. В этом классе имеется
+внутренний класс ChatBuilder, который является билдером.
+Он повторяет поля класса Chat и имеет методы, работающие
+с этими полями. Также конструктор класса Chat приватный,
+поэтому его нельзя будет вызвать вне класса. В классе Chat
+имеется статический метод
+public static ChatBuilder having() {
+return new ChatBuilder();
+который возвращает билдер, а метод в классе ChatBuilder
+public Chat done() {
+return new Chat(name, chatId);
+}
+возвращает готовый экземпляр класса Chat.
+
+## Задание 6. Паттерн Factory method
+
+https://github.com/Estoneccc/Bot_keyword_search/blob/task1/task1-Danil/src/main/java/project/domain/Human.java
+https://github.com/Estoneccc/Bot_keyword_search/blob/task1/task1-Danil/src/main/java/project/domain/HumanGenerator.java
+https://github.com/Estoneccc/Bot_keyword_search/blob/task1/task1-Danil/src/main/java/project/domain/Man.java
+https://github.com/Estoneccc/Bot_keyword_search/blob/task1/task1-Danil/src/main/java/project/domain/ManGenerator.java
+
+Интерфейс Human является продуктом. Абстрактный класс
+HumanGenerator является создателем. Класс ManGenerator
+является конкретным создателем. Класс Man является конкретным
+продуктом.
+В абстрактном классе HumanGenerator (создатель) имеется
+фабричный метод newHuman(), который возвращает объект
+Human (продукт). В классе ManGenerator (конкретный создатель)
+этот метод переопределяется и возвращает конкретный продукт Man.
