@@ -5,6 +5,9 @@ import project.processors.states.State;
 
 import java.util.List;
 
+/**
+ * Таргет
+ */
 public interface PersonService {
     void savePerson(Person person);
     Person findByPerson(Long chatId);

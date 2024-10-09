@@ -7,6 +7,9 @@ import org.springframework.stereotype.Repository;
 import project.domain.Person;
 import project.processors.states.State;
 
+/**
+ * Адаптируемый интерфейс
+ */
 @Repository
 public interface PersonRepository extends JpaRepository<Person, Long> {
     @Query("SELECT p.activeChat FROM Person p WHERE p.chatId = :chatId")

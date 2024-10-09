@@ -11,6 +11,9 @@ import project.repositories.PersonRepository;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Адаптер
+ */
 @Service
 public class PersonServiceImpl implements PersonService {
 

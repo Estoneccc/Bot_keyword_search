@@ -2,8 +2,9 @@ package project.domain;
 
 /**
  * Паттерн Builder
+ * Конкретный продукт
  */
-public class Chat {
+public class Chat implements ChatEntity{
 
     private final String name;
     private final Long chatId;
@@ -16,10 +17,12 @@ public class Chat {
     public static ChatBuilder having() {
         return new ChatBuilder();
     }
+    @Override
     public String getName() {
         return name;
     }
 
+    @Override
     public Long getChatId() {
         return chatId;
     }
