@@ -61,3 +61,31 @@ HumanGenerator является создателем. Класс ManGenerator
 фабричный метод newHuman(), который возвращает объект
 Human (продукт). В классе ManGenerator (конкретный создатель)
 этот метод переопределяется и возвращает конкретный продукт Man.
+
+## Задание 7. Паттерн Abstract factory
+
+https://github.com/Estoneccc/Bot_keyword_search/blob/task1/task1-Danil/src/main/java/project/services/ChatFactory.java
+https://github.com/Estoneccc/Bot_keyword_search/blob/task1/task1-Danil/src/main/java/project/services/impl/DefaultChatFactory.java
+https://github.com/Estoneccc/Bot_keyword_search/blob/task1/task1-Danil/src/main/java/project/domain/ChatEntity.java
+https://github.com/Estoneccc/Bot_keyword_search/blob/task1/task1-Danil/src/main/java/project/domain/Chat.java
+
+Интерфейс ChatFactory является абстрактной фабрикой,
+так как имеет только те методы, которые создают какие-то объекты,
+то есть продукты. Класс DefaultChatFactory реализует интерфейс
+ChatFactory, и поэтому является конкретной фабрикой. Класс
+ChatEntity, является продуктом, так как его создает фабрика.
+А класс Chat, является конкретным продуктом, так как он
+реализует интерфейс продукта ChatEntity.
+
+## Задание 8. Паттерн Adapter
+
+https://github.com/Estoneccc/Bot_keyword_search/blob/task1/task1-Danil/src/main/java/project/services/PersonService.java
+https://github.com/Estoneccc/Bot_keyword_search/blob/task1/task1-Danil/src/main/java/project/services/impl/PersonServiceImpl.java
+https://github.com/Estoneccc/Bot_keyword_search/blob/task1/task1-Danil/src/main/java/project/repositories/PersonRepository.java
+
+Интерфейс PersonService является таргетом. PersonRepository - это
+адаптируемый интерфейс, который реализует конкретные методы для
+работы с базой. Класс PersonServiceImpl - это реализация PersonService,
+которая использует PersonRepository для выполнения операций. Этот класс
+является адаптером, так как наследуется от PersonService и содержит в себе экземпляр
+PersonRepository, как композицию.
