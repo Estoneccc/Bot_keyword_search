@@ -89,3 +89,13 @@ https://github.com/Estoneccc/Bot_keyword_search/blob/task1/task1-Danil/src/main/
 которая использует PersonRepository для выполнения операций. Этот класс
 является адаптером, так как наследуется от PersonService и содержит в себе экземпляр
 PersonRepository, как композицию.
+
+## Задание 9. Паттерн Bridge
+
+https://github.com/Estoneccc/Bot_keyword_search/blob/task1/task1-Danil/src/main/java/project/services/impl/PersonChatServiceImpl.java
+https://github.com/Estoneccc/Bot_keyword_search/blob/task1/task1-Danil/src/main/java/project/services/impl/CustomPersonChatService.java
+https://github.com/Estoneccc/Bot_keyword_search/blob/task1/task1-Danil/src/main/java/project/repositories/PersonChatRepository.java
+
+Класс PersonChatServiceImpl является абстракцией, так как в нем используется
+композиция в виде реализации PersonChatRepository. Класс CustomPersonChatService
+является уточненной абстракцией, так как наследуются от абстракции UserInterface.
