@@ -8,6 +8,9 @@ import project.domain.PersonChat;
 
 import java.util.List;
 
+/**
+ * Реализация
+ */
 @Repository
 public interface PersonChatRepository extends JpaRepository<PersonChat, Long> {
     @Query("SELECT pc FROM PersonChat pc WHERE pc.userId = :userId")

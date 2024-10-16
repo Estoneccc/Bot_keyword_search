@@ -10,6 +10,9 @@ import project.services.PersonChatService;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Абстракция
+ */
 @Service
 public class PersonChatServiceImpl implements PersonChatService {
     private final PersonChatRepository personChatRepository;
