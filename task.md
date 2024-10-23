@@ -99,3 +99,32 @@ https://github.com/Estoneccc/Bot_keyword_search/blob/task1/task1-Danil/src/main/
 Класс PersonChatServiceImpl является абстракцией, так как в нем используется
 композиция в виде реализации PersonChatRepository. Класс CustomPersonChatService
 является уточненной абстракцией, так как наследуются от абстракции UserInterface.
+
+## Задание 10. Composite
+
+https://github.com/Estoneccc/Bot_keyword_search/blob/task1/task1-Danil/src/main/java/project/domain/MessageComponent.java
+https://github.com/Estoneccc/Bot_keyword_search/blob/task1/task1-Danil/src/main/java/project/domain/MessageComposite.java
+https://github.com/Estoneccc/Bot_keyword_search/blob/task1/task1-Danil/src/main/java/project/domain/MessageLeaf.java
+
+Общий интерфейс для всех элементов MessageComponent является компонентом.
+Класс MessageComposite
+является узлом, так как в нем реализован метод addMessage()
+для создания потомков и метод removeMessage() для их удаления. У класса MessageLeaf
+эти методы выбрасывают ошибку,
+поэтому у него потомков быть не может. Таким образом класс MessageLeaf является листом.
+
+## Задание 11. Decorator
+
+https://github.com/Estoneccc/Bot_keyword_search/blob/task1/task1-Danil/src/main/java/project/processors/MessageProcessor.java
+https://github.com/Estoneccc/Bot_keyword_search/blob/task1/task1-Danil/src/main/java/project/processors/MessageProcessorDecorator.java
+https://github.com/Estoneccc/Bot_keyword_search/blob/task1/task1-Danil/src/main/java/project/processors/BasicMessageProcessor.java
+https://github.com/Estoneccc/Bot_keyword_search/blob/task1/task1-Danil/src/main/java/project/processors/KeywordFilteringMessageProcessor.java
+https://github.com/Estoneccc/Bot_keyword_search/blob/task1/task1-Danil/src/main/java/project/processors/LoggingMessageProcessor.java
+
+Базовый интерфейс для обработки сообщений, который будет декорироваться,
+MessageProcessor, является компонентом. Абстрактный класс
+MessageProcessorDecorator является декоратором, так как он наследуется
+от компонента и содержит его композицию. Классы KeywordFilteringMessageProcessor и
+LoggingMessageProcessor являются конкретными декораторами, так как наследуются от
+декоратора. Класс BasicMessageProcessor является конкретным компонентом, так
+как наследуется от компонента.
