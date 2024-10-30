@@ -29,6 +29,9 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
 
 import java.util.*;
 
+/**
+ * Паттерн Facade
+ */
 @Component
 public class TelegramBot extends TelegramLongPollingBot implements Bot {
     private final String botId = System.getenv("bot_Id");
