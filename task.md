@@ -128,3 +128,24 @@ MessageProcessorDecorator является декоратором, так как
 LoggingMessageProcessor являются конкретными декораторами, так как наследуются от
 декоратора. Класс BasicMessageProcessor является конкретным компонентом, так
 как наследуется от компонента.
+
+## Задание 12. Facade
+
+https://github.com/Estoneccc/Bot_keyword_search/blob/task1/task1-Danil/src/main/java/project/bot/impl/TelegramBot.java
+
+Класс TelegramBot является фасадом, так как он скрывает сложную логику 
+взаимодействия с несколькими сервисами, упрощая код для работы с основными 
+функциями бота. Он содержит в себе в виде композиций три работающих класса:
+personService, chatWithBotService, personChatService.
+
+## Задание 13. Flyweight
+
+https://github.com/Estoneccc/Bot_keyword_search/blob/task1/task1-Danil/src/main/java/project/domain/Keyword.java
+https://github.com/Estoneccc/Bot_keyword_search/blob/task1/task1-Danil/src/main/java/project/domain/ConcreteKeyword.java
+https://github.com/Estoneccc/Bot_keyword_search/blob/task1/task1-Danil/src/main/java/project/domain/KeywordFactory.java
+
+Три класса: Keyword, ConcreteKeyword и KeywordFactory реализуют паттерн Flyweight.
+Интерфейс Keyword представляет общую функциональность для ключевых слов.
+Класс ConcreteKeyword хранит данные, которые могут быть общими для разных пользователей.
+Фабрика KeywordFactory хранит уникальные объекты ключевых слов, создавая 
+их только при необходимости.
