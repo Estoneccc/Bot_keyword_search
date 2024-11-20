@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import project.domain.ChatWithBot;
 import project.domain.iterator.ChatIterator;
 import project.domain.iterator.ChatWithBotIterator;
+import project.domain.mediator.ChatMediator;
 import project.repositories.ChatWithBotRepository;
 import project.services.ChatWithBotService;
 
@@ -15,21 +16,18 @@ import java.util.Optional;
 @Service
 public class ChatWithBotServiceImpl implements ChatWithBotService {
     private final ChatWithBotRepository chatWithBotRepository;
-
-    private final List<ChatWithBot> chatList = new ArrayList<>();
+    private final ChatMediator chatMediator;
 
     @Autowired
-    public ChatWithBotServiceImpl(ChatWithBotRepository chatWithBotRepository) {
+    public ChatWithBotServiceImpl(ChatWithBotRepository chatWithBotRepository, ChatMediator chatMediator) {
         this.chatWithBotRepository = chatWithBotRepository;
-    }
-
-    public ChatIterator getActiveChatIterator() {
-        return new ChatWithBotIterator(chatList);
+        this.chatMediator = chatMediator;
     }
 
     @Override
     public void saveChat(ChatWithBot chatWithBot) {
         chatWithBotRepository.save(chatWithBot);
+        chatMediator.updateChats(); // Обновляем чаты через посредника
     }
 
     @Override
@@ -51,6 +49,7 @@ public class ChatWithBotServiceImpl implements ChatWithBotService {
     @Override
     public void deleteChat(ChatWithBot chatWithBot) {
         chatWithBotRepository.delete(chatWithBot);
+        chatMediator.updateChats(); // Удаляем чат и обновляем чаты через посредника
     }
 
     @Override

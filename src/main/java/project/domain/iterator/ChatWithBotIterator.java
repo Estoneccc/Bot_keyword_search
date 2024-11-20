@@ -4,28 +4,25 @@ import project.domain.ChatWithBot;
 
 import java.util.List;
 
-public class ChatWithBotIterator implements ChatIterator{
+public class ChatWithBotIterator implements ChatIterator {
     private final List<ChatWithBot> chats;
     private int position = 0;
 
+    // Конструктор для передачи списка чатов
     public ChatWithBotIterator(List<ChatWithBot> chats) {
         this.chats = chats;
     }
 
     @Override
     public boolean hasNext() {
-        while (position < chats.size()) {
-            ChatWithBot chat = chats.get(position);
-            if (chat.isActive()) {
-                return true;
-            }
-            position++;
-        }
-        return false;
+        return position < chats.size();
     }
 
     @Override
     public ChatWithBot next() {
-        return null;
+        if (!hasNext()) {
+            throw new IllegalStateException("No more chats available.");
+        }
+        return chats.get(position++);
     }
 }
