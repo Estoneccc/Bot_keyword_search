@@ -3,9 +3,12 @@ package project.services.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import project.domain.ChatWithBot;
+import project.domain.iterator.ChatIterator;
+import project.domain.iterator.ChatWithBotIterator;
 import project.repositories.ChatWithBotRepository;
 import project.services.ChatWithBotService;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,9 +16,15 @@ import java.util.Optional;
 public class ChatWithBotServiceImpl implements ChatWithBotService {
     private final ChatWithBotRepository chatWithBotRepository;
 
+    private final List<ChatWithBot> chatList = new ArrayList<>();
+
     @Autowired
     public ChatWithBotServiceImpl(ChatWithBotRepository chatWithBotRepository) {
         this.chatWithBotRepository = chatWithBotRepository;
+    }
+
+    public ChatIterator getActiveChatIterator() {
+        return new ChatWithBotIterator(chatList);
     }
 
     @Override

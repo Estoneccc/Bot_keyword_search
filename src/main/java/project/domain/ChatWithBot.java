@@ -12,6 +12,8 @@ public class ChatWithBot {
     private Long chatId;
     private String firstName;
 
+    private boolean active;
+
     public ChatWithBot(Long chatId, String firstName) {
         this.chatId = chatId;
         this.firstName = firstName;
@@ -27,5 +29,13 @@ public class ChatWithBot {
 
     public String getFirstName() {
         return firstName;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 }
