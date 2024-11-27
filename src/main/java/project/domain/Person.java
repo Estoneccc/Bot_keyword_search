@@ -4,6 +4,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import project.domain.memento.PersonCaretaker;
+import project.domain.observer.Observer;
 import project.processors.states.State;
 
 
@@ -12,7 +13,7 @@ import project.processors.states.State;
   */
 @Entity
 @Table(name = "person")
-public class Person {
+public class Person implements Observer {
 
     @Id
     private Long chatId;
@@ -74,5 +75,10 @@ public class Person {
     public void restoreFromMemento(PersonCaretaker memento) {
         this.state = memento.getState();
         this.activeChat = memento.getActiveChat();
+    }
+
+    @Override
+    public void update(String message) {
+        System.out.printf("Пользователь %s (%d) получил уведомление: %s%n", name, chatId, message);
     }
 }
