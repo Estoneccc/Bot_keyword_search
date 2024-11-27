@@ -3,6 +3,7 @@ package project.domain;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import project.domain.memento.PersonCaretaker;
 import project.processors.states.State;
 
 
@@ -64,5 +65,14 @@ public class Person {
 
     public void setActiveChat(Long activeChat) {
         this.activeChat = activeChat;
+    }
+
+    public PersonCaretaker saveToMemento() {
+        return new PersonCaretaker(state, activeChat);
+    }
+
+    public void restoreFromMemento(PersonCaretaker memento) {
+        this.state = memento.getState();
+        this.activeChat = memento.getActiveChat();
     }
 }
