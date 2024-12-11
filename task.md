@@ -236,3 +236,11 @@ AbstractMessageHandler содержит шаблонный метод processMes
 делегируют конкретную реализацию подклассам. Подклассы StartCommandHandler и SuperGroupMessageHandler
 предоставляют уникальную реализацию абстрактных методов, StartCommandHandler реализует метод handlePrivateMessage,
 SuperGroupMessageHandler - реализует handleSuperGroupMessage.
+
+## Задание 25. Visitor
+Интерфейс MessageVisitor является посетителем. Он определяет операции, которые можно выполнить с каждым типом элемента.
+Интерфейс Visitable добавляется к классам, которые должны быть обработаны посетителем.
+Метод accept(MessageVisitor visitor) вызывает у переданного посетителя соответствующий 
+метод для обработки. Конкретные элементы PrivateMessage, GroupMessage, CallbackQuery представляют
+конкретный тип данных, который должен быть обработан. MessageProcessor является конкретным посетителем.
+Этот класс реализует интерфейс MessageVisitor и выполняет конкретные действия для каждого типа элемента.
